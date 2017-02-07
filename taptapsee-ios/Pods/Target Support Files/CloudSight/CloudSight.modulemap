@@ -1,0 +1,6 @@
+framework module CloudSight {
+  umbrella header "CloudSight-umbrella.h"
+
+  export *
+  module * { export * }
+}

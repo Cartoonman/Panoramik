@@ -1,0 +1,6 @@
+framework module BFOAuth {
+  umbrella header "BFOAuth-umbrella.h"
+
+  export *
+  module * { export * }
+}
