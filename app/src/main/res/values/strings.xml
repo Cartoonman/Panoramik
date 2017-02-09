@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pano Lite</string>
+    <string name="compass_interference_msg">Compass interference detected.\nPlease wave your device in a figure 8 pattern</string>
+    <string name="instruction_tap_start">Tap to start</string>
+    <string name="instruction_hold_vertically">Hold your device vertically</string>
+    <string name="instruction_focusing">Focusing</string>
+    <string name="instruction_first_shot">Rotate left or right or tap to restart</string>
+    <string name="instruction_finish_shot">Tap to finish when ready or continue rotating</string>
+    <string name="instruction_empty" />
+    <string name="empty" />
+    <string name="wb">White Balance</string>
+    <string name="wb_locked_start">Locked On Start</string>
+    <string name="wb_auto">Auto</string>
+    <string name="wb_cloudy_daylight">Cloudy Daylight</string>
+    <string name="wb_daylight">Daylight</string>
+    <string name="wb_fluorescent">Fluorescent</string>
+    <string name="wb_incandescent">Incandescent</string>
+    <string name="exp_auto">Auto</string>
+    <string name="exp_locked">Locked</string>
+    <string name="exp_locked_start">Locked On Start</string>
+    <string name="flash_off">Off</string>
+    <string name="flash_on">On</string>
+    <string name="flash_auto">Auto</string>
+    <string name="flash_torch">Torch</string>
+    <string name="warning">Warning!!!</string>
+    <string name="camera_error_msg">Cannot Access Camera, the application will close now.</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="screen_error_msg">Screen resolution is not supported, the application will close now.</string>
+    <string name="memory_full_dialog_text">"Memory full! Please delete some files to save the panorama."</string>
+    <string name="sdcard_error_dialog_text">"USB storage unavailable! Panorama can't be saved."</string>
+
+</resources>
