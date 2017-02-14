@@ -104,7 +104,7 @@ public class ShooterActivity extends Activity {
                 mViewGroupCamera.removeView(mViewPreviewCaptureEffect);
             }
 
-            mImageViewCameraCaptureEffect.setImageBitmap(mBitmapCameraCaptureEffect);
+            mImageViewCameraCaptureEffect.setImageBitmap(mBitmapCameraCaptureEffect); // image?
             mViewGroupCamera.addView(mImageViewCameraCaptureEffect);
             mViewGroupCamera.addView(mViewPreviewCaptureEffect);
             mViewPreviewCaptureEffect.startAnimation(mAlphaAnimationCameraCaptureEffect);
