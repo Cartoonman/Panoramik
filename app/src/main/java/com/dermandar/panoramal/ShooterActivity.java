@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+
 public class ShooterActivity extends Activity {
 
     private Handler mHandler;
