@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Pano Lite</string>
+    <string name="app_name">Panoramik</string>
     <string name="compass_interference_msg">Compass interference detected.\nPlease wave your device in a figure 8 pattern</string>
     <string name="instruction_tap_start">Tap to start</string>
     <string name="instruction_hold_vertically">Hold your device vertically</string>

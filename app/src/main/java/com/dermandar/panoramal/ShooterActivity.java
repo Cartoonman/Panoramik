@@ -28,6 +28,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.speech.tts.TextToSpeech;
+import android.view.View.OnClickListener;
+
 import com.dermandar.dmd_lib.CallbackInterfaceShooter;
 import com.dermandar.dmd_lib.DMD_Capture;
 import com.dermandar.dmd_lib.DMD_Capture.FinishShootingEnum;
@@ -39,8 +42,9 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class ShooterActivity extends Activity {
-
+public class ShooterActivity extends Activity
+{
+    TextToSpeech tts;
     private Handler mHandler;
 
     private RelativeLayout mRelativeLayoutRoot;
