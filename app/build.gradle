@@ -21,6 +21,5 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:18.0.0'
     compile files('libs/dmd_pano_library_lite.jar')
-    compile project(':openCVLibrary320')
-    compile files('libs/Imshow.jar')
+
 }
