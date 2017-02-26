@@ -21,5 +21,6 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:18.0.0'
     compile files('libs/dmd_pano_library_lite.jar')
-
+    compile files('libs/GenAsync.1.2.jar')
+    compile files('libs/PhotoUtil.jar')
 }
