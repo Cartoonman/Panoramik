@@ -24,6 +24,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,10 @@ import java.util.HashMap;
 
 public class ShooterActivity extends Activity
 {
+
+    /////
+    public static String testString = "Processing...";
+    /////
     TextToSpeech tts;
     private Handler mHandler;
 
@@ -75,7 +80,11 @@ public class ShooterActivity extends Activity
     private AnimationSet mAnimationSetCameraCaptureEffect;
     private View mViewPreviewCaptureEffect;
 
+
+    private TextView mResultText;
     private TextView mTextViewInstruction;
+
+    private LinearLayout linearLayout;
 
     private SimpleDateFormat mSimpleDateFormat;
 
@@ -144,7 +153,7 @@ public class ShooterActivity extends Activity
             Log.wtf("@__@", "++++++   stitchingCompleted:" + obj);
             lAngle = obj;
             //##########################################
-
+            ShooterActivity.testString = "Processing...";
         }
 
         @Override
@@ -219,13 +228,15 @@ public class ShooterActivity extends Activity
             new SingleMediaScanner(ShooterActivity.this, mEquiPath);
             saveAngle();
             mIsStitching = false;
+            //intent is only when a certain action occurs = in this case, tap to  finish image
+            sendImageToServer(mEquiPath);
             Intent intentViewer = new Intent(ShooterActivity.this, ViewerActivity.class);
             intentViewer.putExtra("PanoramaName", mPanoramaName);
             startActivity(intentViewer);
+            //show on full image view
+
+
             toastMessage("Panorama saved in gallery");
-
-            sendImageToServer(mEquiPath);
-
 
 
             System.out.println("soemthingggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg");
@@ -250,7 +261,12 @@ public class ShooterActivity extends Activity
         PostResponseAsyncTask task = new PostResponseAsyncTask(ShooterActivity.this, postData, new AsyncResponse() {
             @Override
             public void processFinish(String s) {
-                System.out.println(s);
+//                Json js = Convert(s);
+//                display(js.get("title"));
+                ShooterActivity.testString = s;
+                ViewerActivity.tv.setText(s);
+                ViewerActivity.tv.invalidate();
+
 
             }
         });
@@ -313,6 +329,13 @@ public class ShooterActivity extends Activity
         mTextViewInstruction.setGravity(Gravity.CENTER);
         setInstructionMessage(R.string.instruction_tap_start);
         mRelativeLayoutRoot.addView(mTextViewInstruction);
+
+        // New text view
+        mResultText = new TextView(this);
+        mResultText.setTextSize(32f);
+//        mResultText.setText("HELLO WORLD");
+        mResultText.setGravity(Gravity.BOTTOM);
+        mRelativeLayoutRoot.addView(mResultText);
 
         //View Preview Capture animation
         mViewPreviewCaptureEffect = new View(this);

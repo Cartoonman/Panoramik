@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.dermandar.dmd_lib.CallbackInterfaceViewer;
 import com.dermandar.dmd_lib.DMD_Viewer;
@@ -16,11 +17,14 @@ public class ViewerActivity extends Activity {
     private DMD_Viewer mDMDViewer;
     private View mViewViewer;
 
+    public static TextView tv;
+
     private Display mDisplay;
     private DisplayMetrics mDisplayMetrics;
     private CallbackInterfaceViewer mCallbackInterfaceViewer = new CallbackInterfaceViewer() {
         @Override
         public void onSingleTapConfirmed() {
+
         }
 
         @Override
@@ -51,6 +55,12 @@ public class ViewerActivity extends Activity {
         mViewViewer = mDMDViewer.initViewer(this, mCallbackInterfaceViewer, getWindowManager().getDefaultDisplay().getRotation());
         mRelativeLayoutRoot.addView(mViewViewer);
 
+        //////////////////////
+        ViewerActivity.tv = new TextView(this);
+        ViewerActivity.tv.setTextSize(32f);
+        ViewerActivity.tv.setText(ShooterActivity.testString);
+        mRelativeLayoutRoot.addView(ViewerActivity.tv);
+        /////////////////////
         setContentView(mRelativeLayoutRoot);
     }
 
