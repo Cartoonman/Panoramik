@@ -43,6 +43,9 @@ import com.kosalgeek.genasync12.EachExceptionsHandler;
 import com.kosalgeek.genasync12.PostResponseAsyncTask;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -264,10 +267,16 @@ public class ShooterActivity extends Activity
 //                Json js = Convert(s);
 //                display(js.get("title"));
                 ShooterActivity.testString = s;
-                ViewerActivity.tv.setText(s);
-                ViewerActivity.tv.invalidate();
+                try {
+                    JSONObject json = new JSONObject(s);
+                    String test = (String)json.get("job_id");
+                    ViewerActivity.rp = test;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-
+//                ViewerActivity.tv.setText(s);
+//                ViewerActivity.tv.invalidate();
             }
         });
         task.execute("https://panoramik.herokuapp.com/uploadImage");
