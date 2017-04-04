@@ -271,6 +271,7 @@ public class ShooterActivity extends Activity
             }
         });
         task.execute("https://panoramik.herokuapp.com/uploadImage");
+        //task.execute("http://panoramik.herokuapp.com/status?job_id="+ String_JobUrl)
         task.setEachExceptionsHandler(new EachExceptionsHandler() {
             @Override
             public void handleIOException(IOException e) {
