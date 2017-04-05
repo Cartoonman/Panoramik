@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,6 +52,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -226,11 +229,42 @@ public class ShooterActivity extends Activity
             mBitmapCameraCaptureEffect = bitmapPreview;
         }
 
+
+        public Bitmap RotateBitmap(Bitmap source, float angle)
+        {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(angle);
+            return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+        }
+
         @Override
         public void onFinishGeneratingEqui() {
             new SingleMediaScanner(ShooterActivity.this, mEquiPath);
             saveAngle();
             mIsStitching = false;
+
+            Bitmap bitmap = BitmapFactory.decodeFile(mEquiPath);
+            float angle = 90.0f;
+
+            bitmap = RotateBitmap(bitmap, angle);
+
+            FileOutputStream out = null;
+            try {
+                out = new FileOutputStream(mEquiPath);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                // PNG is a lossless format, the compression factor (100) is ignored
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             //intent is only when a certain action occurs = in this case, tap to  finish image
             sendImageToServer(mEquiPath);
             Intent intentViewer = new Intent(ShooterActivity.this, ViewerActivity.class);

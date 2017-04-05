@@ -99,7 +99,7 @@ public class ViewerActivity extends Activity {
 // Add the request to the RequestQueue.
                 queue.add(stringRequest);
             }
-        }, 10000, 5000);
+        }, 2000, 1000);
     }
 
     @Override
