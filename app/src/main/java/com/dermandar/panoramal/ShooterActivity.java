@@ -24,6 +24,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,9 +35,27 @@ import android.view.View.OnClickListener;
 import com.dermandar.dmd_lib.CallbackInterfaceShooter;
 import com.dermandar.dmd_lib.DMD_Capture;
 import com.dermandar.dmd_lib.DMD_Capture.FinishShootingEnum;
+import com.kosalgeek.android.photoutil.ImageBase64;
+import com.kosalgeek.android.photoutil.ImageLoader;
+import com.kosalgeek.android.photoutil.MainActivity;
+import com.kosalgeek.genasync12.AsyncResponse;
+import com.kosalgeek.genasync12.EachExceptionsHandler;
+import com.kosalgeek.genasync12.PostResponseAsyncTask;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,6 +63,10 @@ import java.util.HashMap;
 
 public class ShooterActivity extends Activity
 {
+
+    /////
+    public static String testString = "Processing...";
+    /////
     TextToSpeech tts;
     private Handler mHandler;
 
@@ -60,7 +83,11 @@ public class ShooterActivity extends Activity
     private AnimationSet mAnimationSetCameraCaptureEffect;
     private View mViewPreviewCaptureEffect;
 
+
+    private TextView mResultText;
     private TextView mTextViewInstruction;
+
+    private LinearLayout linearLayout;
 
     private SimpleDateFormat mSimpleDateFormat;
 
@@ -129,7 +156,7 @@ public class ShooterActivity extends Activity
             Log.wtf("@__@", "++++++   stitchingCompleted:" + obj);
             lAngle = obj;
             //##########################################
-
+            ShooterActivity.testString = "Processing...";
         }
 
         @Override
@@ -204,12 +231,83 @@ public class ShooterActivity extends Activity
             new SingleMediaScanner(ShooterActivity.this, mEquiPath);
             saveAngle();
             mIsStitching = false;
+            //intent is only when a certain action occurs = in this case, tap to  finish image
+            sendImageToServer(mEquiPath);
             Intent intentViewer = new Intent(ShooterActivity.this, ViewerActivity.class);
             intentViewer.putExtra("PanoramaName", mPanoramaName);
             startActivity(intentViewer);
+            //show on full image view
+
+
             toastMessage("Panorama saved in gallery");
+
+
+            System.out.println("soemthingggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg");
+
         }
     };
+
+
+    public void sendImageToServer(String filePath) {
+        Bitmap bm = null;
+
+        try {
+            bm = ImageLoader.init().from(filePath).requestSize(908, 374).getBitmap();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String encodedImage = ImageBase64.encode(bm);
+        HashMap<String, String> postData = new HashMap<String, String>();
+        postData.put("file", encodedImage);
+        PostResponseAsyncTask task = new PostResponseAsyncTask(ShooterActivity.this, postData, new AsyncResponse() {
+            @Override
+            public void processFinish(String s) {
+//                Json js = Convert(s);
+//                display(js.get("title"));
+                ShooterActivity.testString = s;
+                try {
+                    JSONObject json = new JSONObject(s);
+                    String test = (String)json.get("job_id");
+                    ViewerActivity.rp = test;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+//                ViewerActivity.tv.setText(s);
+//                ViewerActivity.tv.invalidate();
+            }
+        });
+        task.execute("https://panoramik.herokuapp.com/uploadImage");
+        //task.execute("http://panoramik.herokuapp.com/status?job_id="+ String_JobUrl)
+        task.setEachExceptionsHandler(new EachExceptionsHandler() {
+            @Override
+            public void handleIOException(IOException e) {
+                System.out.println("111111111111111111111111111111111");
+            }
+
+            @Override
+            public void handleMalformedURLException(MalformedURLException e) {
+                System.out.println("2222222222222222222222222222");
+            }
+
+            @Override
+            public void handleProtocolException(ProtocolException e) {
+                System.out.println("3333333333333333333333333333");
+
+            }
+
+            @Override
+            public void handleUnsupportedEncodingException(UnsupportedEncodingException e) {
+                System.out.println("444444444444444444444444444444444444444");
+
+            }
+        });
+
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,6 +339,13 @@ public class ShooterActivity extends Activity
         mTextViewInstruction.setGravity(Gravity.CENTER);
         setInstructionMessage(R.string.instruction_tap_start);
         mRelativeLayoutRoot.addView(mTextViewInstruction);
+
+        // New text view
+        mResultText = new TextView(this);
+        mResultText.setTextSize(32f);
+//        mResultText.setText("HELLO WORLD");
+        mResultText.setGravity(Gravity.BOTTOM);
+        mRelativeLayoutRoot.addView(mResultText);
 
         //View Preview Capture animation
         mViewPreviewCaptureEffect = new View(this);
