@@ -1,11 +1,13 @@
 package com.dermandar.panoramal;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
@@ -20,7 +22,16 @@ import com.android.volley.toolbox.Volley;
 import com.dermandar.dmd_lib.CallbackInterfaceViewer;
 import com.dermandar.dmd_lib.DMD_Viewer;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 public class ViewerActivity extends Activity {
+
+    public static JSONArray hello;
+    TextToSpeech tts1;
+
     private RelativeLayout mRelativeLayoutRoot;
 
     private DMD_Viewer mDMDViewer;
@@ -74,6 +85,17 @@ public class ViewerActivity extends Activity {
         /////////////////////
         setContentView(mRelativeLayoutRoot);
 
+        tts1 = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    tts1.setLanguage(Locale.US);
+                    tts1.setSpeechRate(1/2);
+                }
+            }
+        });
+
+
         tr = new Timer();
         final RequestQueue queue = Volley.newRequestQueue(this);
         tr.scheduleAtFixedRate(new TimerTask() {
@@ -88,6 +110,40 @@ public class ViewerActivity extends Activity {
                             public void onResponse(String response) {
                                 // Display the first 500 characters of the response string.
                                 tv.setText(response);
+                                //please poop
+                                try{
+                                    tts1.speak("Objects", TextToSpeech.QUEUE_FLUSH, null);
+                                    System.out.println("fshfdhfsfhsjfhdsufhfhdskjfhsfksh11111111111111111");
+                                    JSONObject json = new JSONObject(response);
+                                    System.out.println("fshfdhfsfhsjfhdsufhfhdskjfhsfksh22222222222222222");
+                                    ViewerActivity.hello = (JSONArray)json.get("final_result");
+                                    System.out.println("fshfdhfsfhsjfhdsufhfhdskjfhsfksh33333333333333333");
+                                    System.out.println("000000000000000000000000000000000000000000000000000000000000000000");
+                                    System.out.println(hello);
+                                    System.out.println(hello.length());
+                                    for( int x = 0; x < hello.length(); x++){
+                                        //System.out.println(hello.get(x)); this prints out everything in the json
+                                        JSONArray image = (JSONArray)hello.get(x);
+                                        JSONObject dict = (JSONObject)image.get(0);
+                                        JSONArray cloudsight = (JSONArray)dict.get("cloudsight");
+                                        String status = (String)cloudsight.get(0);
+                                        //System.out.println(status);
+                                        if(status.equals("completed")){
+                                            String result = (String)cloudsight.get(1);
+                                            System.out.println(result);
+                                            tts1.speak(result, TextToSpeech.QUEUE_ADD, null);
+                                        }
+                                        //tts1.speak("Objects detected ", TextToSpeech.QUEUE_FLUSH, null);
+
+                                    }
+
+
+
+                                    tr.cancel();
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 // System.out.println("Response is: "+ response.substring(0,10));
                             }
                         }, new Response.ErrorListener() {

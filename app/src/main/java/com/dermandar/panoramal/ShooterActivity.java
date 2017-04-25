@@ -300,8 +300,9 @@ public class ShooterActivity extends Activity
 //                display(js.get("title"));
                 ShooterActivity.testString = s;
                 try {
-                    JSONObject json = new JSONObject(s);
+                    JSONObject json = new JSONObject(s); //
                     String test = (String)json.get("job_id");
+                    System.out.println(test);
                     ViewerActivity.rp = test;
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -478,7 +479,7 @@ public class ShooterActivity extends Activity
 
         setContentView(mRelativeLayoutRoot);
         //showAngle();
-        System.out.println("ALLSADJFKAS;LDKFJAS;LDKFJA;SLDKFJA;SLDKFJA;LSDKFJ");
+
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -488,7 +489,7 @@ public class ShooterActivity extends Activity
                 }
             }
         });
-        System.out.println("ALLSADJFKAS;LDKFJAS;LDKFJA;SLDKFJA;SLDKFJA;LSDKFJ");
+
     }
 
     @Override
@@ -573,4 +574,7 @@ public class ShooterActivity extends Activity
         }
 
     }
+
+
+
 }
