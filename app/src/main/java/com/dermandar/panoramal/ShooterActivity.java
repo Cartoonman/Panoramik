@@ -29,6 +29,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//starting here//
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.PhoneLookup;
+import android.speech.tts.TextToSpeech;
+import android.telephony.SmsMessage;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+//ending here//
+
 import android.speech.tts.TextToSpeech;
 import android.view.View.OnClickListener;
 
@@ -59,6 +77,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 public class ShooterActivity extends Activity
@@ -82,6 +101,11 @@ public class ShooterActivity extends Activity
     private AlphaAnimation mAlphaAnimationCameraCaptureEffect;
     private AnimationSet mAnimationSetCameraCaptureEffect;
     private View mViewPreviewCaptureEffect;
+
+//added more shizzles
+
+
+//here end shizzles
 
 
     private TextView mResultText;
@@ -109,12 +133,14 @@ public class ShooterActivity extends Activity
                     mTextViewInstruction.setVisibility(View.INVISIBLE);
                 }
                 mIsCapturing = false;
+                //tts.speak("Tap to start", TextToSpeech.QUEUE_FLUSH, null);
                 setInstructionMessage(R.string.instruction_tap_start);
             } else {
                 mNumberTakenImages = 0;
                 mPanoramaName = mSimpleDateFormat.format(new Date());
 
                 if (mDMDCapture.startShooting()) {
+                    tts.speak("Focusing", TextToSpeech.QUEUE_FLUSH, null);
                     setInstructionMessage(R.string.instruction_focusing);
                     mIsCapturing = true;
                     //set flag to keep the screen on
@@ -127,6 +153,7 @@ public class ShooterActivity extends Activity
 
         @Override
         public void takingPhoto() {
+            //tts.speak("Taking Photo", TextToSpeech.QUEUE_FLUSH, null);
             if (mImageViewCameraCaptureEffect.getParent() != null) {
                 mViewGroupCamera.removeView(mImageViewCameraCaptureEffect);
                 mImageViewCameraCaptureEffect.setImageDrawable(null);
@@ -162,6 +189,7 @@ public class ShooterActivity extends Activity
         @Override
         public void shootingCompleted(boolean finished) {
             //clear the flag to prevent the screen of being on
+            tts.speak("Finish taking panorama", TextToSpeech.QUEUE_FLUSH, null);
             getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             if (finished) {
@@ -179,8 +207,10 @@ public class ShooterActivity extends Activity
         public void photoTaken() {
             if (mNumberTakenImages == 0) {
                 setInstructionMessage(R.string.instruction_first_shot);
+                tts.speak("Rotate left or right or tap to restart", TextToSpeech.QUEUE_FLUSH, null);
             } else {
                 setInstructionMessage(R.string.instruction_finish_shot);
+                tts.speak("Tap to finish when ready or continue rotating", TextToSpeech.QUEUE_FLUSH, null);
             }
             mNumberTakenImages++;
             mImageViewCameraCaptureEffect.startAnimation(mAnimationSetCameraCaptureEffect);
@@ -190,8 +220,10 @@ public class ShooterActivity extends Activity
         public void deviceVerticalityChanged(int isVertical) {
             if (!mIsCapturing) {
                 if (isVertical == 1) {
+                    tts.speak("Tap to start", TextToSpeech.QUEUE_FLUSH, null);
                     setInstructionMessage(R.string.instruction_tap_start);
                 } else {
+                    tts.speak("Hold your device vertically", TextToSpeech.QUEUE_FLUSH, null);
                     setInstructionMessage(R.string.instruction_hold_vertically);
                 }
             }
@@ -446,6 +478,17 @@ public class ShooterActivity extends Activity
 
         setContentView(mRelativeLayoutRoot);
         //showAngle();
+        System.out.println("ALLSADJFKAS;LDKFJAS;LDKFJA;SLDKFJA;SLDKFJA;LSDKFJ");
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    tts.setLanguage(Locale.US);
+                    tts.setSpeechRate(1/2);
+                }
+            }
+        });
+        System.out.println("ALLSADJFKAS;LDKFJAS;LDKFJA;SLDKFJA;SLDKFJA;LSDKFJ");
     }
 
     @Override
@@ -457,6 +500,8 @@ public class ShooterActivity extends Activity
 
             mIsCapturing = false;
             setInstructionMessage(R.string.instruction_tap_start);
+            //tts.speak("Tap to start", TextToSpeech.QUEUE_FLUSH, null);
+
         }
         mDMDCapture.stopShooting();
     }
@@ -480,6 +525,7 @@ public class ShooterActivity extends Activity
             mDMDCapture.restart(this, mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels);
             mIsCapturing = false;
             setInstructionMessage(R.string.instruction_tap_start);
+            //tts.speak("Tap to start", TextToSpeech.QUEUE_FLUSH, null);
         } else {
             super.onBackPressed();
         }
@@ -500,6 +546,8 @@ public class ShooterActivity extends Activity
         if (msgID == R.string.instruction_empty || msgID == R.string.instruction_hold_vertically || msgID == R.string.instruction_tap_start
                 || msgID == R.string.instruction_focusing) {
             params.addRule(RelativeLayout.CENTER_VERTICAL);
+
+            //tts.speak("please please please please work", TextToSpeech.QUEUE_FLUSH, null);
         } else {
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         }
